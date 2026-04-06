@@ -8,17 +8,23 @@ import { GenreService } from "../../utils/genreService.js";
  * @returns {JSX.Element}
  */
 export default function PodcastCard({ podcast }) {
-  const genres = GenreService.getNames(podcast.genres).slice(0, 2).join(" | ");
+  const safePodcast = podcast ?? {};
+  const genres = GenreService.getNames(safePodcast.genres).slice(0, 2).join(" | ");
+  const title = safePodcast.title || "Untitled podcast";
+  const image = safePodcast.image || "";
+  const description = safePodcast.description || "No description available.";
+  const seasons = Number(safePodcast.seasons) || 0;
+  const updated = safePodcast.updated ? formatDate(safePodcast.updated) : "Unknown date";
 
   return (
-    <article className="podcast-card" style={{ "--bg": `url(${podcast.image})` }}>
-      <img className="podcast-image" src={podcast.image} alt={podcast.title} />
-      <p className="podcast-date">{formatDate(podcast.updated)}</p>
-      <h3 className="podcast-title">{podcast.title}</h3>
-      <p className="podcast-description">{podcast.description}</p>
+    <article className="podcast-card" style={{ "--bg": `url(${image})` }}>
+      <img className="podcast-image" src={image} alt={title} />
+      <p className="podcast-date">{updated}</p>
+      <h3 className="podcast-title">{title}</h3>
+      <p className="podcast-description">{description}</p>
 
       <div className="podcast-meta">
-        <span>{podcast.seasons} seasons</span>
+        <span>{seasons} seasons</span>
         <span>{genres}</span>
       </div>
     </article>

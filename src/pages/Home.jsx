@@ -9,6 +9,7 @@ import SortSelect from "../components/Filters/SortSelect.jsx";
 import { GenreService } from "../utils/genreService.js";
 import { SORT_OPTIONS } from "../utils/sortOptions.js";
 import Pagination from "../components/UI/Pagnation.jsx";
+import PodcastCarousel from "../components/Podcasts/PodcastCarousel.jsx";
 
 const HOME_STATE_KEYS = {
   search: "home.searchTerm",
@@ -163,6 +164,7 @@ function Home() {
 
       {!loading && !error && (
         <>
+          <PodcastCarousel podcasts={podcasts} />
           <PodcastGrid podcasts={pagedPodcasts} />
           <Pagination
             totalPages={totalPages}

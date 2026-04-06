@@ -194,6 +194,12 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 {episode.description}
                               </p>
                             )}
+                            <audio controls 
+                            src={episode.file}
+                            className={styles.episodeAudio}
+                            >
+
+                            </audio>
                           </li>
                         );
                       })}

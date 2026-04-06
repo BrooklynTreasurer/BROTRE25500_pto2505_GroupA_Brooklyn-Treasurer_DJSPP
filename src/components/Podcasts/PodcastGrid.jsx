@@ -14,7 +14,7 @@ export default function PodcastGrid({ podcasts }) {
     <div className="podcast-grid">
       {podcasts.map(podcast => (
         <Link key={podcast.id} to={`/show/${podcast.id}`} className="podcast-link">
-        <PodcastCard key={podcast.id} podcast={podcast}/>
+        <PodcastCard podcast={podcast}/>
         </Link>
       ))}
     </div>
