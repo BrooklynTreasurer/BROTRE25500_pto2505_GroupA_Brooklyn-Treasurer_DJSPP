@@ -1,0 +1,35 @@
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.pageButton,
+.navButton {
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.pageButton:hover,
+.navButton:hover {
+  border-color: var(--effect);
+}
+
+.active {
+  background: var(--effect);
+  color: #fff;
+  border-color: var(--effect);
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

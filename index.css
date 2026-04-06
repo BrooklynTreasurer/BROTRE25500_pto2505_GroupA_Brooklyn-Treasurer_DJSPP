@@ -1,0 +1,445 @@
+:root {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  color-scheme: light;
+  --bg-primary: #f8fafc;
+  --secondary: #d2d3db;
+  --card: #e4e5f1;
+  --effect: #39ace7;
+  --surface: #ffffff;
+  --text: #111827;
+  --text-muted: #4b5563;
+  --text-soft: #374151;
+  --border: #e5e7eb;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Manual theme override: set on <html data-theme="light"> or <html data-theme="dark"> */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-primary: #0b1220;
+  --secondary: #252526;
+  --card: #3e3e42;
+  --effect: #6c63ff;
+  --surface: #111827;
+  --text: #f3f4f6;
+  --text-muted: #cbd5e1;
+  --text-soft: #d1d5db;
+  --border: #374151;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Auto dark mode if no manual light theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0b1220;
+    --surface: #111827;
+    --text: #f3f4f6;
+    --text-muted: #cbd5e1;
+    --text-soft: #d1d5db;
+    --border: #374151;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    --shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* This is for links and anchor links */
+a:link, a:visited, a:hover, a:active {
+  text-decoration: none;
+}
+
+.app-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--secondary);
+  padding: 1rem 1.5rem;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.theme-toggle {
+  background: var(--effect);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.podcast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  width: min(1200px, 100% - 2rem);
+  margin: 0 auto;
+}
+
+.recommended-carousel-section {
+  width: min(1200px, 100% - 2rem);
+  margin: 0 auto 1.25rem;
+}
+
+.recommended-carousel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.recommended-carousel-title {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.recommended-carousel-more {
+  font-size: 1.5rem;
+  color: var(--effect);
+}
+
+.recommended-carousel-shell {
+  position: relative;
+  padding: 1rem 1.4rem 1.25rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(108, 118, 255, 0.35) 0%, rgba(0, 82, 247, 0.92) 11%, rgba(7, 10, 16, 0.92) 89%, rgba(130, 18, 235, 0.35) 100%),
+    radial-gradient(circle at top left, rgba(51, 0, 255, 0.22), transparent 45%),
+    radial-gradient(circle at top right, rgba(93, 38, 220, 0.22), transparent 45%),
+    #070a10;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+}
+
+.recommended-carousel-slide {
+  padding: 0 0.45rem;
+}
+
+.recommended-carousel-shell .slick-track {
+  display: flex;
+}
+
+.recommended-carousel-shell .slick-slide > div {
+  height: 100%;
+}
+
+.recommended-podcast-link {
+  display: block;
+  height: 100%;
+}
+
+.recommended-podcast-card {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recommended-podcast-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.55);
+}
+
+.recommended-podcast-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.recommended-podcast-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 1.1rem 0.65rem 1.7rem;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.88) 100%);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.recommended-podcast-genres {
+  position: absolute;
+  left: 0.65rem;
+  right: 0.65rem;
+  bottom: 0.55rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.recommended-podcast-genres span {
+  display: inline-block;
+  max-width: 100%;
+  font-size: 0.64rem;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recommended-carousel-shell .slick-prev,
+.recommended-carousel-shell .slick-next {
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+}
+
+.recommended-carousel-shell .slick-prev {
+  left: -2px;
+}
+
+.recommended-carousel-shell .slick-next {
+  right: -2px;
+}
+
+.recommended-carousel-shell .slick-prev:before,
+.recommended-carousel-shell .slick-next:before {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 30px;
+}
+
+.recommended-carousel-shell .slick-dots {
+  bottom: -22px;
+}
+
+.recommended-carousel-shell .slick-dots li {
+  width: 22px;
+  height: 8px;
+  margin: 0 2px;
+}
+
+.recommended-carousel-shell .slick-dots li button {
+  width: 22px;
+  height: 8px;
+  padding: 0;
+}
+
+.recommended-carousel-shell .slick-dots li button:before {
+  content: "";
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  top: 2px;
+  left: 2px;
+  opacity: 1;
+}
+
+.recommended-carousel-shell .slick-dots li.slick-active button:before {
+  background: #ffffff;
+}
+
+.podcast-card {
+  position: relative;
+  min-height: 290px;
+  border-radius: 12px;
+  padding: 0.9rem;
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-align: left;
+  background: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.podcast-card::before {
+  content: "";
+  position: absolute;
+  inset: -8px; /* avoids blur clipping at edges */
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  transform: scale(1.06);
+  z-index: 0;
+}
+
+.podcast-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 20%, rgba(0, 0, 0, 0.85) 100%);
+  z-index: 1;
+}
+
+.podcast-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.podcast-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+  border: 3px solid #6c63ff;
+}
+
+.podcast-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: auto;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.podcast-title {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.podcast-date {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 0.72rem;
+  opacity: 0.9;
+}
+
+.podcast-description {
+  margin: 0.4rem 0 0.6rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  opacity: 0.92;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.podcast-meta {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.podcast-meta span {
+  font-size: 0.68rem;
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+
+/* loading video styling  */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.loader-video {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;  
+  border: 4px solid #6c63ff;
+  object-fit: cover;       
+  box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+}
+
+.controls {
+  margin: 0 auto 14px;
+  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 14px;
+  width: min(1200px, 100%);
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .theme-toggle {
+    width: 100%;
+  }
+
+  .controls {
+    gap: 10px;
+  }
+
+  .podcast-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    width: calc(100% - 1rem);
+  }
+
+  .season-card {
+    grid-template-columns: 1fr;
+  }
+
+  .season-image {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+  }
+
+  .recommended-carousel-shell {
+    padding: 0.8rem 1rem 1.1rem;
+  }
+
+  .recommended-carousel-slide {
+    padding: 0 0.3rem;
+  }
+}

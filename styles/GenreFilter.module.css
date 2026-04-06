@@ -1,0 +1,96 @@
+.genreFilter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 240px;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dropdown {
+  position: relative;
+  width: 240px;
+  max-width: 100%;
+}
+
+.trigger {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.trigger:hover {
+  border-color: var(--effect);
+}
+
+.triggerText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.arrow {
+  font-size: 0.75rem;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  z-index: 20;
+}
+
+.option {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: rgba(108, 99, 255, 0.12);
+}
+
+.optionSelected {
+  font-weight: 600;
+  color: var(--effect);
+  background: rgba(108, 99, 255, 0.12);
+}
+
+@media (max-width: 640px) {
+  .genreFilter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    flex-basis: 100%;
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+}
