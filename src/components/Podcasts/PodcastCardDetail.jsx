@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import formatDate from "../../utils/formatDate.js";
 import styles from "../../styles/PodcastCardDetail.module.css";
 import detailBackground from "../../assets/svg.png";
@@ -49,7 +50,7 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
   return (
     <section className={styles.page}>
       <div className={styles.backLink}>
-        <a href="../">&larr; Back to all podcasts</a>
+        <Link to="/">&larr; Back to all podcasts</Link>
       </div>
       <header
         className={styles.hero}
