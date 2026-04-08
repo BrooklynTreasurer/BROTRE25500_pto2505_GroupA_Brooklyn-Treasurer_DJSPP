@@ -207,7 +207,7 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 }
                                 disabled={!episodeSource}
                               >
-                                {isActiveEpisode && isPlaying ? "Now Playing" : "Play in Player"}
+                                {isActiveEpisode && isPlaying ? "Now Playing" : "Listen To Episode"}
                               </button>
                             </div>
                           </li>
