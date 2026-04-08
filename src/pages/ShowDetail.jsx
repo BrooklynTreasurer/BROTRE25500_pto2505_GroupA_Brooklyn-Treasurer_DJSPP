@@ -72,7 +72,7 @@ function ShowDetail() {
   if (error) return <p>Error: {error}</p>;
   if (!show) return <p>Show not found.</p>;
 
-  return <PodcastCardDetail podcast={show} genreNames={genreNames} />;
+  return <PodcastCardDetail key={show.id} podcast={show} genreNames={genreNames} />;
 }
 
 export default ShowDetail;

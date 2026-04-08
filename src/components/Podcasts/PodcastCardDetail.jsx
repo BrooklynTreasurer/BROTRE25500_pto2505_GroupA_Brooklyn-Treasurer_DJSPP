@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import formatDate from "../../utils/formatDate.js";
 import styles from "../../styles/PodcastCardDetail.module.css";
 import detailBackground from "../../assets/svg.png";
+import { useAudioPlayerStore } from "../../store/audioPlayerStore.js";
 
 /**
  * Renders a detailed podcast card view.
@@ -18,17 +19,7 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
   const [isSeasonMenuOpen, setIsSeasonMenuOpen] = useState(false);
   const seasonMenuRef = useRef(null);
-
-  useEffect(() => {
-    setSelectedSeasonIndex(0);
-    setIsSeasonMenuOpen(false);
-  }, [podcast.id]);
-
-  useEffect(() => {
-    if (selectedSeasonIndex > seasons.length - 1) {
-      setSelectedSeasonIndex(Math.max(seasons.length - 1, 0));
-    }
-  }, [selectedSeasonIndex, seasons.length]);
+  const { playTrack, currentTrack, isPlaying } = useAudioPlayerStore();
 
   useEffect(() => {
     const closeMenuOnOutsideClick = (event) => {
@@ -176,6 +167,10 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                     <ol>
                       {selectedSeasonEpisodes.map((episode, episodeIndex) => {
                         const episodeNumber = episode.episode || episodeIndex + 1;
+                        const episodeSource = episode.file || "";
+                        const isActiveEpisode =
+                          Boolean(episodeSource) && currentTrack?.src === episodeSource;
+
                         return (
                           <li
                             key={
@@ -194,12 +189,26 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 {episode.description}
                               </p>
                             )}
-                            <audio controls 
-                            src={episode.file}
-                            className={styles.episodeAudio}
-                            >
 
-                            </audio>
+                            <div className={styles.episodeActions}>
+                              <button
+                                type="button"
+                                className={`${styles.episodePlayButton} ${
+                                  isActiveEpisode ? styles.episodePlayButtonActive : ""
+                                }`}
+                                onClick={() =>
+                                  playTrack({
+                                    src: episodeSource,
+                                    title: episode.title || `Episode ${episodeNumber}`,
+                                    showTitle: podcast.title || "Podcast",
+                                    image: selectedSeason?.image || podcast.image,
+                                  })
+                                }
+                                disabled={!episodeSource}
+                              >
+                                {isActiveEpisode && isPlaying ? "Now Playing" : "Play in Player"}
+                              </button>
+                            </div>
                           </li>
                         );
                       })}
