@@ -8,6 +8,15 @@ function formatTime(seconds) {
   return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
 }
 
+function pauseOtherMediaElements(activeElement) {
+  const mediaElements = document.querySelectorAll("audio, video");
+  mediaElements.forEach((mediaElement) => {
+    if (mediaElement !== activeElement && !mediaElement.paused) {
+      mediaElement.pause();
+    }
+  });
+}
+
 /**
  * Persistent player dock rendered once at application root.
  * @returns {JSX.Element|null}
@@ -36,6 +45,7 @@ export default function AudioPlayer() {
     }
 
     if (isPlaying) {
+      pauseOtherMediaElements(audioElement);
       audioElement.play().catch(() => {
         pause();
       });
@@ -63,6 +73,15 @@ export default function AudioPlayer() {
       audioElement.removeEventListener("ended", pause);
     };
   }, [pause, setCurrentTime, setDuration]);
+
+  useEffect(() => {
+    return () => {
+      if (!audioRef.current) return;
+      audioRef.current.pause();
+      audioRef.current.removeAttribute("src");
+      audioRef.current.load();
+    };
+  }, []);
 
   if (!currentTrack?.src) {
     return <audio ref={audioRef} preload="metadata" hidden />;

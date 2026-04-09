@@ -169,8 +169,16 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                       {selectedSeasonEpisodes.map((episode, episodeIndex) => {
                         const episodeNumber = episode.episode || episodeIndex + 1;
                         const episodeSource = episode.file || "";
+                        const episodeTrackId = `${
+                          podcast.id || "podcast"
+                        }-${selectedSeasonNumber}-${
+                          episode.id || `episode-${episodeNumber}`
+                        }`;
                         const isActiveEpisode =
-                          Boolean(episodeSource) && currentTrack?.src === episodeSource;
+                          Boolean(episodeSource) &&
+                          (currentTrack?.id
+                            ? currentTrack.id === episodeTrackId
+                            : currentTrack?.src === episodeSource);
 
                         return (
                           <li
@@ -199,6 +207,7 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 }`}
                                 onClick={() =>
                                   playTrack({
+                                    id: episodeTrackId,
                                     src: episodeSource,
                                     title: episode.title || `Episode ${episodeNumber}`,
                                     showTitle: podcast.title || "Podcast",

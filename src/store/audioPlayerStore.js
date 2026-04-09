@@ -14,7 +14,10 @@ export const useAudioPlayerStore = create((set, get) => ({
     if (!track?.src) return;
 
     const previousTrack = get().currentTrack;
-    const isNewTrack = previousTrack?.src !== track.src;
+    const isSameTrack =
+      (track.id && previousTrack?.id && previousTrack.id === track.id) ||
+      previousTrack?.src === track.src;
+    const isNewTrack = !isSameTrack;
 
     set({
       currentTrack: track,
