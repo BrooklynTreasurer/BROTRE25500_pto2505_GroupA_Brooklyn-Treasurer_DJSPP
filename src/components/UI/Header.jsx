@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 /**
  * Resolves the initial color theme from local storage or system preference.
@@ -30,23 +31,18 @@ export default function Header() {
   return (
     <header className="app-header">
       <h1>🎙️Podcast App</h1>
-  
-  <button 
-  type="button"
-  className="favorite-button"
-  >
-    Favourites
-    ❤️
-  </button>
-  <button
-  type="button"
-  className="theme-toggle"
-  onClick={() =>
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
->
-  {theme === "dark" ? "🌞 Light" : "🌙 Dark"}
-</button>
+      <nav className="app-header__nav" aria-label="Primary">
+        <Link to="/favourites" className="favorite-button">
+          Favourites ❤️
+        </Link>
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          {theme === "dark" ? "🌞 Light" : "🌙 Dark"}
+        </button>
+      </nav>
     </header>
   );
 }
