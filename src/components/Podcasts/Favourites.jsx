@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useFavouritesStore } from "../../store/favouritesStore.js";
 import SortSelect from "../Filters/SortSelect.jsx";
+import styles from "../../styles/Favourites.module.css";
 
 const SORT_OPTIONS = [
   { key: "addedAt-desc", label: "Date added (newest first)" },
@@ -51,8 +52,8 @@ export default function Favourites() {
   );
 
   return (
-    <div className="favourites-page">
-      <div className="favourites-page__header">
+    <div className={styles.favouritesPage}>
+      <div className={styles.favouritesPage__header}>
         <div>
           <h2>Your Favourite Episodes</h2>
           <p>
@@ -68,24 +69,24 @@ export default function Favourites() {
       </div>
 
       {sortedFavourites.length === 0 ? (
-        <p>No favourites yet. Add an episode from a show detail page.</p>
+        <p className={styles.emptyState}>No favourites yet. Add an episode from a show detail page.</p>
       ) : (
-        <ul className="favourites-list">
+        <ul className={styles.favouritesList}>
           {sortedFavourites.map((episode) => (
-            <li key={episode.id || episode.src} className="favourites-item">
+            <li key={episode.id || episode.src} className={styles.favouritesItem}>
               <img
                 src={episode.image}
                 alt={episode.showTitle || episode.title}
-                className="favourites-item__image"
+                className={styles.favouritesItem__image}
               />
-              <div className="favourites-item__content">
+              <div className={styles.favouritesItem__content}>
                 <strong>{episode.title}</strong>
                 <span>{episode.showTitle}</span>
                 <p>Added {formatDateTime(episode.addedAt)}</p>
               </div>
               <button
                 type="button"
-                className="favourites-item__remove"
+                className={styles.favouritesItem__remove}
                 onClick={() => removeFavourite(episode.id || episode.src)}
               >
                 Remove
