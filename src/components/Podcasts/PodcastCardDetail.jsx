@@ -4,6 +4,7 @@ import formatDate from "../../utils/formatDate.js";
 import styles from "../../styles/PodcastCardDetail.module.css";
 import detailBackground from "../../assets/svg.png";
 import { useAudioPlayerStore } from "../../store/audioPlayerStore.js";
+import AddFavourites from "../Filters/AddFavourites.jsx";
 
 /**
  * Renders a detailed podcast card view.
@@ -218,6 +219,16 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                               >
                                 {isActiveEpisode && isPlaying ? "Now Playing" : "Listen To Episode"}
                               </button>
+                              <AddFavourites
+                                episode={{
+                                  id: episodeTrackId,
+                                  src: episodeSource,
+                                  title: episode.title || `Episode ${episodeNumber}`,
+                                  showTitle: podcast.title || "Podcast",
+                                  image: selectedSeason?.image || podcast.image,
+                                  description: episode.description,
+                                }}
+                              />
                             </div>
 
                     
