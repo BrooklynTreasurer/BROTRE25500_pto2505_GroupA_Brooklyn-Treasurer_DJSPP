@@ -88,7 +88,24 @@ a:link, a:visited, a:hover, a:active {
   line-height: 1.2;
 }
 
+.app-header__nav{
+  display: flex;
+  gap: 1rem;
+}
+
 .theme-toggle {
+  background: var(--effect);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-button__nav{
   background: var(--effect);
   border: none;
   padding: 0.5rem 1rem;

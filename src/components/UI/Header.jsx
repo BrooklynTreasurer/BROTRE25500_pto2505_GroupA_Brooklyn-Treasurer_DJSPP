@@ -35,6 +35,9 @@ export default function Header() {
         <Link to="/favourites" className="favorite-button">
           Favourites ❤️
         </Link>
+        <Link to="/" className="home-button__nav">
+          Home 🏠
+        </Link>
         <button
           type="button"
           className="theme-toggle"
