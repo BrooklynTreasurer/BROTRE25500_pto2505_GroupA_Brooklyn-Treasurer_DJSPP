@@ -100,6 +100,18 @@ a:link, a:visited, a:hover, a:active {
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.favorite-button{
+  background: var(--effect);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
 .podcast-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

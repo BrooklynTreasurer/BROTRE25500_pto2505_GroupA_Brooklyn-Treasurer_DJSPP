@@ -33,7 +33,7 @@ export default function Header() {
   
   <button 
   type="button"
-  className="FavoriteButton"
+  className="favorite-button"
   >
     Favourites
     ❤️
