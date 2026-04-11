@@ -35,6 +35,7 @@ export default function AudioPlayer() {
   const audioRef = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [volume, setVolume] = useState(0.8);
+  const [pendingSeekTime, setPendingSeekTime] = useState(null);
   const {
     currentTrack,
     isPlaying,
@@ -70,18 +71,33 @@ export default function AudioPlayer() {
     const audioElement = audioRef.current;
     if (!audioElement) return undefined;
 
-    const handleTimeUpdate = () => setCurrentTime(audioElement.currentTime || 0);
-    const handleDurationChange = () => setDuration(audioElement.duration || 0);
+    const handleTimeUpdate = () => {
+      const current = audioElement.currentTime || 0;
+      setCurrentTime(current);
+    };
+
+    const handleDurationChange = () => {
+      setDuration(audioElement.duration || 0);
+      setCurrentTime(audioElement.currentTime || 0);
+    };
+
+    const handleSeeked = () => {
+      const current = audioElement.currentTime || 0;
+      setCurrentTime(current);
+      setPendingSeekTime(null);
+    };
 
     audioElement.addEventListener("timeupdate", handleTimeUpdate);
     audioElement.addEventListener("loadedmetadata", handleDurationChange);
     audioElement.addEventListener("durationchange", handleDurationChange);
+    audioElement.addEventListener("seeked", handleSeeked);
     audioElement.addEventListener("ended", pause);
 
     return () => {
       audioElement.removeEventListener("timeupdate", handleTimeUpdate);
       audioElement.removeEventListener("loadedmetadata", handleDurationChange);
       audioElement.removeEventListener("durationchange", handleDurationChange);
+      audioElement.removeEventListener("seeked", handleSeeked);
       audioElement.removeEventListener("ended", pause);
     };
   }, [pause, setCurrentTime, setDuration]);
@@ -111,13 +127,27 @@ export default function AudioPlayer() {
 
   const safeDuration = duration > 0 ? duration : 0;
   const safeCurrentTime = safeDuration > 0 ? Math.min(currentTime, safeDuration) : 0;
+  const displayCurrentTime = pendingSeekTime !== null ? pendingSeekTime : safeCurrentTime;
   const isSeekDisabled = safeDuration <= 0;
 
   const updateCurrentTime = (nextTime) => {
-    const safeTime = Math.min(safeDuration, Math.max(0, Number(nextTime) || 0));
-    if (audioRef.current) {
-      audioRef.current.currentTime = safeTime;
+    const numericTime = Number(nextTime);
+    const safeTime = Math.min(safeDuration, Math.max(0, numericTime || 0));
+    const audioElement = audioRef.current;
+
+    if (audioElement) {
+      if (audioElement.readyState >= 1) {
+        audioElement.currentTime = safeTime;
+      } else {
+        const applyPendingSeek = () => {
+          audioElement.currentTime = safeTime;
+          audioElement.removeEventListener("loadedmetadata", applyPendingSeek);
+        };
+        audioElement.addEventListener("loadedmetadata", applyPendingSeek);
+      }
     }
+
+    setPendingSeekTime(safeTime);
     setCurrentTime(safeTime);
   };
 
@@ -154,14 +184,14 @@ export default function AudioPlayer() {
         </div>
 
         <div className="global-audio-player__progress-row">
-          <span>{formatTime(safeCurrentTime)}</span>
+          <span>{formatTime(displayCurrentTime)}</span>
           <input
             className="global-audio-player__range global-audio-player__seek"
             type="range"
             min={0}
             max={safeDuration || 1}
             step={0.1}
-            value={safeCurrentTime}
+            value={pendingSeekTime !== null ? pendingSeekTime : safeCurrentTime}
             onChange={(event) => updateCurrentTime(event.target.value)}
             onInput={(event) => updateCurrentTime(event.target.value)}
             aria-label="Seek in current episode"

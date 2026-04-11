@@ -219,6 +219,8 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 {isActiveEpisode && isPlaying ? "Now Playing" : "Listen To Episode"}
                               </button>
                             </div>
+
+                    
                           </li>
                         );
                       })}
