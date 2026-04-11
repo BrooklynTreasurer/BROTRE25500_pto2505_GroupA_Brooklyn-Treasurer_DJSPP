@@ -771,3 +771,15 @@ a:link, a:visited, a:hover, a:active {
     min-height: 42px;
   }
 }
+
+ .episode-favourite-button{
+    margin-left: 450px;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.76rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }

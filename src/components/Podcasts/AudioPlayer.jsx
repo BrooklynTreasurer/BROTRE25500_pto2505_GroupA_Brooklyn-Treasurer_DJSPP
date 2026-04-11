@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAudioPlayerStore } from "../../store/audioPlayerStore.js";
+import { useFavouritesStore } from "../../store/favouritesStore.js";
 
 const PLAYBACK_RATES = [1, 1.25, 1.5, 2];
 
@@ -46,6 +47,8 @@ export default function AudioPlayer() {
     setCurrentTime,
     setDuration,
   } = useAudioPlayerStore();
+  const updateFavouriteProgress = useFavouritesStore((state) => state.updateFavouriteProgress);
+  const lastProgressUpdate = useRef(0);
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -74,6 +77,14 @@ export default function AudioPlayer() {
     const handleTimeUpdate = () => {
       const current = audioElement.currentTime || 0;
       setCurrentTime(current);
+
+      const trackId = currentTrack?.id || currentTrack?.src;
+      const safeDuration = audioElement.duration || 0;
+      const isIntervalPassed = Math.abs(current - lastProgressUpdate.current) >= 5;
+      if (trackId && safeDuration > 0 && isIntervalPassed) {
+        lastProgressUpdate.current = current;
+        updateFavouriteProgress(trackId, current, safeDuration);
+      }
     };
 
     const handleDurationChange = () => {
@@ -85,6 +96,13 @@ export default function AudioPlayer() {
       const current = audioElement.currentTime || 0;
       setCurrentTime(current);
       setPendingSeekTime(null);
+
+      const trackId = currentTrack?.id || currentTrack?.src;
+      const safeDuration = audioElement.duration || 0;
+      if (trackId && safeDuration > 0) {
+        lastProgressUpdate.current = current;
+        updateFavouriteProgress(trackId, current, safeDuration);
+      }
     };
 
     audioElement.addEventListener("timeupdate", handleTimeUpdate);

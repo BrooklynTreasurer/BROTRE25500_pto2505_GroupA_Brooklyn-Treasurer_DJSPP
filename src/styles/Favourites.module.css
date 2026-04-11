@@ -84,14 +84,43 @@
   font-size: 0.9rem;
 }
 
+.favouritesItem__progress {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.favouritesItem__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.favouritesItem__play,
 .favouritesItem__remove {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text);
-  padding: 0.7rem 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 0.85rem;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.favouritesItem__play {
+  background: var(--effect);
+  color: #ffffff;
+  border-color: var(--effect);
+}
+
+.favouritesItem__play:hover {
+  background: #2d8cd0;
+  border-color: #2d8cd0;
+}
+
+.favouritesItem__remove {
+  background: transparent;
 }
 
 .favouritesItem__remove:hover {

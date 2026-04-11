@@ -7,7 +7,7 @@ export default function AddFavourites({ episode }) {
   const removeFavourite = useFavouritesStore((state) => state.removeFavourite);
 
   const identifier = useMemo(
-    () => episode?.id || episode?.src || "",
+    () => episode?.src || episode?.id || "",
     [episode],
   );
 
@@ -32,7 +32,7 @@ export default function AddFavourites({ episode }) {
       disabled={!episode?.src}
       aria-pressed={isFavourite}
     >
-      {isFavourite ? "Remove from Favourites" : "Add to Favourites"}
+      {isFavourite ? "❤️" : "🤍"}
     </button>
   );
 }

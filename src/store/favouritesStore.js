@@ -5,7 +5,10 @@ const STORAGE_KEY = "podcastAppFavourites";
 function loadFavourites() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (!stored) return [];
+
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -27,13 +30,16 @@ export const useFavouritesStore = create((set, get) => ({
     if (!episode?.src) return;
 
     const nextEpisode = {
-      id: episode.id || episode.src,
+      id: episode.src || episode.id,
       src: episode.src,
       title: episode.title || "Untitled episode",
       showTitle: episode.showTitle || "Podcast",
       image: episode.image || "",
       description: episode.description || "",
       addedAt: new Date().toISOString(),
+      playedTime: 0,
+      duration: 0,
+      progress: 0,
     };
 
     set((state) => {
@@ -62,6 +68,32 @@ export const useFavouritesStore = create((set, get) => ({
       const favourites = state.favourites.filter(
         (item) => item.id !== identifier && item.src !== identifier,
       );
+      persistFavourites(favourites);
+      return { favourites };
+    });
+  },
+
+  updateFavouriteProgress: (identifier, playedTime, duration) => {
+    set((state) => {
+      const favourites = state.favourites.map((item) => {
+        if (item.id !== identifier && item.src !== identifier) {
+          return item;
+        }
+
+        const safePlayedTime = Math.max(0, Number(playedTime) || 0);
+        const safeDuration = Math.max(0, Number(duration) || 0);
+        const progress = safeDuration > 0
+          ? Math.min(100, Math.round((safePlayedTime / safeDuration) * 100))
+          : item.progress || 0;
+
+        return {
+          ...item,
+          playedTime: safePlayedTime,
+          duration: safeDuration,
+          progress,
+        };
+      });
+
       persistFavourites(favourites);
       return { favourites };
     });

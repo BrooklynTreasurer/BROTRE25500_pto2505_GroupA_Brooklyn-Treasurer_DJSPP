@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useAudioPlayerStore } from "../../store/audioPlayerStore.js";
 import { useFavouritesStore } from "../../store/favouritesStore.js";
 import SortSelect from "../Filters/SortSelect.jsx";
 import styles from "../../styles/Favourites.module.css";
@@ -27,16 +28,23 @@ function formatDateTime(dateString) {
 
 function sortFavourites(favourites, sortKey) {
   return [...favourites].sort((a, b) => {
+    const titleA = String(a?.title || "");
+    const titleB = String(b?.title || "");
+
     if (sortKey === "title-asc") {
-      return a.title.localeCompare(b.title);
+      return titleA.localeCompare(titleB);
     }
     if (sortKey === "title-desc") {
-      return b.title.localeCompare(a.title);
+      return titleB.localeCompare(titleA);
     }
+
+    const timeA = new Date(a?.addedAt || 0).getTime() || 0;
+    const timeB = new Date(b?.addedAt || 0).getTime() || 0;
+
     if (sortKey === "addedAt-asc") {
-      return new Date(a.addedAt) - new Date(b.addedAt);
+      return timeA - timeB;
     }
-    return new Date(b.addedAt) - new Date(a.addedAt);
+    return timeB - timeA;
   });
 }
 
@@ -45,9 +53,12 @@ export default function Favourites() {
   const sortKey = useFavouritesStore((state) => state.sortKey);
   const setSortKey = useFavouritesStore((state) => state.setSortKey);
   const removeFavourite = useFavouritesStore((state) => state.removeFavourite);
+  const playTrack = useAudioPlayerStore((state) => state.playTrack);
+  const currentTrack = useAudioPlayerStore((state) => state.currentTrack);
+  const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
 
   const sortedFavourites = useMemo(
-    () => sortFavourites(favourites, sortKey),
+    () => sortFavourites(Array.isArray(favourites) ? favourites.filter(Boolean) : [], sortKey),
     [favourites, sortKey],
   );
 
@@ -72,27 +83,64 @@ export default function Favourites() {
         <p className={styles.emptyState}>No favourites yet. Add an episode from a show detail page.</p>
       ) : (
         <ul className={styles.favouritesList}>
-          {sortedFavourites.map((episode) => (
-            <li key={episode.id || episode.src} className={styles.favouritesItem}>
-              <img
-                src={episode.image}
-                alt={episode.showTitle || episode.title}
-                className={styles.favouritesItem__image}
-              />
-              <div className={styles.favouritesItem__content}>
-                <strong>{episode.title}</strong>
-                <span>{episode.showTitle}</span>
-                <p>Added {formatDateTime(episode.addedAt)}</p>
-              </div>
-              <button
-                type="button"
-                className={styles.favouritesItem__remove}
-                onClick={() => removeFavourite(episode.id || episode.src)}
-              >
-                Remove
-              </button>
-            </li>
-          ))}
+          {sortedFavourites.map((episode) => {
+            const isActiveEpisode = Boolean(currentTrack?.id)
+              ? currentTrack.id === episode.id
+              : currentTrack?.src === episode.src;
+
+            const safeTitle = episode.title || "Untitled episode";
+            const safeShowTitle = episode.showTitle || "Podcast";
+            const safeImage = episode.image || "";
+            const safeAddedAt = episode.addedAt || "";
+            const safePlayedTime = Math.max(0, Number(episode.playedTime) || 0);
+            const safeDuration = Math.max(0, Number(episode.duration) || 0);
+            const progressPercent = safeDuration > 0
+              ? Math.min(100, Math.round((safePlayedTime / safeDuration) * 100))
+              : 0;
+
+            return (
+              <li key={episode.id || episode.src || safeTitle} className={styles.favouritesItem}>
+                <img
+                  src={safeImage}
+                  alt={safeShowTitle}
+                  className={styles.favouritesItem__image}
+                />
+                <div className={styles.favouritesItem__content}>
+                  <strong>{safeTitle}</strong>
+                  <span>{safeShowTitle}</span>
+                  <p>Added {safeAddedAt ? formatDateTime(safeAddedAt) : "Unknown"}</p>
+                  <p className={styles.favouritesItem__progress}>
+                    {progressPercent > 0 ? `${progressPercent}% listened` : "Not started"}
+                  </p>
+                </div>
+
+                <div className={styles.favouritesItem__actions}>
+                  <button
+                    type="button"
+                    className={styles.favouritesItem__play}
+                    onClick={() =>
+                      playTrack({
+                        id: episode.id || episode.src,
+                        src: episode.src,
+                        title: safeTitle,
+                        showTitle: safeShowTitle,
+                        image: safeImage,
+                      })
+                    }
+                  >
+                    {isActiveEpisode && isPlaying ? "Playing" : "Play"}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.favouritesItem__remove}
+                    onClick={() => removeFavourite(episode.id || episode.src)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
