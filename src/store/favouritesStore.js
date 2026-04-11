@@ -30,7 +30,7 @@ export const useFavouritesStore = create((set, get) => ({
     if (!episode?.src) return;
 
     const nextEpisode = {
-      id: episode.src || episode.id,
+      id: episode.id || episode.src,
       src: episode.src,
       title: episode.title || "Untitled episode",
       showTitle: episode.showTitle || "Podcast",
@@ -44,7 +44,7 @@ export const useFavouritesStore = create((set, get) => ({
 
     set((state) => {
       const existingIndex = state.favourites.findIndex(
-        (item) => item.id === nextEpisode.id || item.src === nextEpisode.src,
+        (item) => item.id === nextEpisode.id,
       );
       const favourites = [...state.favourites];
 
@@ -66,7 +66,7 @@ export const useFavouritesStore = create((set, get) => ({
   removeFavourite: (identifier) => {
     set((state) => {
       const favourites = state.favourites.filter(
-        (item) => item.id !== identifier && item.src !== identifier,
+        (item) => item.id !== identifier,
       );
       persistFavourites(favourites);
       return { favourites };

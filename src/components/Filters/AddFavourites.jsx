@@ -7,13 +7,11 @@ export default function AddFavourites({ episode }) {
   const removeFavourite = useFavouritesStore((state) => state.removeFavourite);
 
   const identifier = useMemo(
-    () => episode?.src || episode?.id || "",
+    () => episode?.id || episode?.src || "",
     [episode],
   );
 
-  const isFavourite = favourites.some(
-    (item) => item.id === identifier || item.src === identifier,
-  );
+  const isFavourite = favourites.some((item) => item.id === identifier);
 
   const handleToggle = () => {
     if (isFavourite) {
