@@ -160,11 +160,10 @@ export default function AudioPlayer() {
             type="range"
             min={0}
             max={safeDuration || 1}
-            step={1}
+            step={0.1}
             value={safeCurrentTime}
-            onChange={(event) => {
-              updateCurrentTime(event.target.value);
-            }}
+            onChange={(event) => updateCurrentTime(event.target.value)}
+            onInput={(event) => updateCurrentTime(event.target.value)}
             aria-label="Seek in current episode"
             disabled={isSeekDisabled}
           />
