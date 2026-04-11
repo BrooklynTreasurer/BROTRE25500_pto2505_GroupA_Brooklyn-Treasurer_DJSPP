@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/UI/Header.jsx";
 import Home from "./pages/Home.jsx";
 import ShowDetail from "./pages/ShowDetail.jsx";
+import FavouritesPage from "./pages/FavouritesPage.jsx";
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/show/:id" element={<ShowDetail />} />
+        <Route path="/favourites" element={<FavouritesPage />} />
       </Routes>
     </>
   );
