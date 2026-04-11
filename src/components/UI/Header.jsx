@@ -32,19 +32,25 @@ export default function Header() {
     <header className="app-header">
       <h1>🎙️Podcast App</h1>
       <nav className="app-header__nav" aria-label="Primary">
-        <Link to="/favourites" className="favorite-button">
-          Favourites ❤️
-        </Link>
         <Link to="/" className="home-button__nav">
           Home 🏠
         </Link>
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        >
-          {theme === "dark" ? "🌞 Light" : "🌙 Dark"}
-        </button>
+        <Link to="/favourites" className="favorite-button">
+          Favourites ❤️
+        </Link>
+        <label className="theme-toggle" aria-label="Toggle light and dark theme">
+          <input
+            type="checkbox"
+            checked={theme === "dark"}
+            onChange={(event) => setTheme(event.target.checked ? "dark" : "light")}
+          />
+          <span className="theme-toggle__track">
+            <span className="theme-toggle__thumb" />
+          </span>
+          <span className="theme-toggle__text">
+            {theme === "dark" ? "Dark" : "Light"}
+          </span>
+        </label>
       </nav>
     </header>
   );

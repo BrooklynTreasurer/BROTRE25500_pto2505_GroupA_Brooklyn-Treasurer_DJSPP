@@ -94,15 +94,61 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
   background: var(--effect);
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
   cursor: pointer;
   color: var(--text);
   font-weight: 500;
   box-shadow: var(--shadow);
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-toggle__track {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 2.2rem;
+  height: 1.2rem;
+  background: var(--background);
+  border: 1px solid var(--text);
+  border-radius: 999px;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle__thumb {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--text);
+  border-radius: 50%;
+  margin-left: 0.15rem;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle input:checked + .theme-toggle__track {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.theme-toggle input:checked + .theme-toggle__track .theme-toggle__thumb {
+  transform: translateX(1rem);
+}
+
+.theme-toggle__text {
+  font-size: 0.9rem;
 }
 
 .home-button__nav{
