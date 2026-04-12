@@ -270,13 +270,6 @@ export default function AudioPlayer() {
           >
             {"15 >>"}
           </button>
-          <button
-            type="button"
-            className="global-audio-player__control global-audio-player__control--ghost global-audio-player__control--dots"
-            aria-label="More player options"
-          >
-            ...
-          </button>
         </div>
       </div>
     </section>

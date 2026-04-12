@@ -135,7 +135,7 @@ export default function Favourites() {
                     className={styles.favouritesItem__remove}
                     onClick={() => removeFavourite(episode.id || episode.src)}
                   >
-                    Remove
+                    🗑️
                   </button>
                 </div>
               </li>
