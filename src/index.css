@@ -184,12 +184,16 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .recommended-carousel-section {
-  width: min(1200px, 100% - 2rem);
+  width: min(1200px, 100%);
+  max-width: 1200px;
+  padding: 0 1rem;
   margin: 0 auto 1.25rem;
 }
 
 .recommended-carousel-header {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
   gap: 0.35rem;
   margin-bottom: 0.65rem;
@@ -197,19 +201,20 @@ a:link, a:visited, a:hover, a:active {
 
 .recommended-carousel-title {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
   line-height: 1.1;
   color: var(--text);
 }
 
 .recommended-carousel-more {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--effect);
 }
 
 .recommended-carousel-shell {
   position: relative;
-  padding: 1rem 1.4rem 1.25rem;
+  overflow: hidden;
+  padding: 1rem 1rem 1.25rem;
   border-radius: 14px;
   background:
     linear-gradient(90deg, rgba(108, 118, 255, 0.35) 0%, rgba(0, 82, 247, 0.92) 11%, rgba(7, 10, 16, 0.92) 89%, rgba(130, 18, 235, 0.35) 100%),
@@ -220,15 +225,23 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .recommended-carousel-slide {
-  padding: 0 0.45rem;
+  padding: 0 0.3rem;
 }
 
+.recommended-carousel-shell .slick-list,
 .recommended-carousel-shell .slick-track {
   display: flex;
+  align-items: stretch;
+}
+
+.recommended-carousel-shell .slick-slide {
+  display: flex;
+  align-items: stretch;
 }
 
 .recommended-carousel-shell .slick-slide > div {
   height: 100%;
+  display: flex;
 }
 
 .recommended-podcast-link {

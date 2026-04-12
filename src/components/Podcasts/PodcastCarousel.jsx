@@ -60,6 +60,8 @@ export default function PodcastCarousel({ podcasts = [], maxShows = 8 }) {
     dots: recommendedPodcasts.length > 1,
     infinite: recommendedPodcasts.length > 1,
     speed: 500,
+    arrows: recommendedPodcasts.length > 1,
+    adaptiveHeight: true,
     slidesToShow: Math.min(5, recommendedPodcasts.length),
     slidesToScroll: 1,
     responsive: [
@@ -79,6 +81,14 @@ export default function PodcastCarousel({ podcasts = [], maxShows = 8 }) {
         breakpoint: 540,
         settings: {
           slidesToShow: Math.min(2, recommendedPodcasts.length),
+          arrows: false,
+        },
+      },
+      {
+        breakpoint: 420,
+        settings: {
+          slidesToShow: 1,
+          arrows: false,
         },
       },
     ],
