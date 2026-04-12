@@ -19,6 +19,11 @@ function formatRate(rate) {
   return `${String(rate).replace(/0+$/, "").replace(/\.$/, "")}x`;
 }
 
+/**
+ * Pause other playing audio or video elements when the global player starts.
+ *
+ * @param {HTMLMediaElement} activeElement
+ */
 function pauseOtherMediaElements(activeElement) {
   const mediaElements = document.querySelectorAll("audio, video");
   mediaElements.forEach((mediaElement) => {
@@ -29,7 +34,8 @@ function pauseOtherMediaElements(activeElement) {
 }
 
 /**
- * Persistent player dock rendered once at application root.
+ * Persistent audio player dock rendered once at the application root.
+ *
  * @returns {JSX.Element|null}
  */
 export default function AudioPlayer() {

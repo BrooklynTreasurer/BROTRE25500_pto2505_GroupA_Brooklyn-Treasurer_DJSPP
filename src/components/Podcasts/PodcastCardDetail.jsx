@@ -15,8 +15,9 @@ function formatTime(seconds) {
 }
 
 /**
- * Renders a detailed podcast card view.
- * @param {Object} props - Component props.
+ * Renders a detailed podcast card view with season and episode playback controls.
+ *
+ * @param {Object} props
  * @param {Object} props.podcast - Podcast details.
  * @param {string[]} [props.genreNames] - Resolved genre names from genre API.
  * @returns {JSX.Element}

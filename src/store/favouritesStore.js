@@ -2,6 +2,10 @@ import { create } from "zustand";
 
 const STORAGE_KEY = "podcastAppFavourites";
 
+/**
+ * Load the persisted favourites list from local storage.
+ * @returns {Array<object>}
+ */
 function loadFavourites() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -14,6 +18,10 @@ function loadFavourites() {
   }
 }
 
+/**
+ * Persist the favourites list to local storage.
+ * @param {Array<object>} favourites
+ */
 function persistFavourites(favourites) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favourites));
@@ -22,6 +30,9 @@ function persistFavourites(favourites) {
   }
 }
 
+/**
+ * Zustand store for favourite episodes and listening progress state.
+ */
 export const useFavouritesStore = create((set, get) => ({
   favourites: loadFavourites(),
   sortKey: "addedAt-desc",

@@ -11,6 +11,12 @@ const SORT_OPTIONS = [
   { key: "title-desc", label: "Title (Z–A)" },
 ];
 
+/**
+ * Format a timestamp string into a human-readable local date and time.
+ *
+ * @param {string} dateString
+ * @returns {string}
+ */
 function formatDateTime(dateString) {
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
@@ -26,6 +32,13 @@ function formatDateTime(dateString) {
   });
 }
 
+/**
+ * Sort saved favourite episodes based on the selected sort key.
+ *
+ * @param {Array<object>} favourites
+ * @param {string} sortKey
+ * @returns {Array<object>}
+ */
 function sortFavourites(favourites, sortKey) {
   return [...favourites].sort((a, b) => {
     const titleA = String(a?.title || "");

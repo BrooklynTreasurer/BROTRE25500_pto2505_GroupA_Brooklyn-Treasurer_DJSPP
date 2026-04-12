@@ -3,6 +3,10 @@ import { create } from "zustand";
 const STORAGE_KEY = "podcastAppAudioState";
 const HISTORY_KEY = "podcastAppListeningHistory";
 
+/**
+ * Load the persisted audio player session from local storage.
+ * @returns {{currentTrack?: object|null, currentTime?: number, duration?: number}}
+ */
 function loadAudioState() {
   if (typeof window === "undefined") {
     return {};
@@ -18,6 +22,10 @@ function loadAudioState() {
   }
 }
 
+/**
+ * Persist the current audio player session state to local storage.
+ * @param {object} state
+ */
 function persistAudioState(state) {
   if (typeof window === "undefined") {
     return;
@@ -35,6 +43,10 @@ function persistAudioState(state) {
   }
 }
 
+/**
+ * Load the listening history cache from local storage.
+ * @returns {Record<string, {playedTime:number,duration:number,progress:number,finished:boolean}>}
+ */
 function loadListeningHistory() {
   if (typeof window === "undefined") {
     return {};
@@ -51,6 +63,10 @@ function loadListeningHistory() {
   }
 }
 
+/**
+ * Persist the listening history cache to local storage.
+ * @param {Record<string, object>} history
+ */
 function persistListeningHistory(history) {
   if (typeof window === "undefined") {
     return;
@@ -66,6 +82,9 @@ function persistListeningHistory(history) {
 const initialAudioState = loadAudioState();
 const initialListeningHistory = loadListeningHistory();
 
+/**
+ * Zustand store for global audio playback state and listening history.
+ */
 export const useAudioPlayerStore = create((set, get) => ({
   currentTrack: initialAudioState.currentTrack || null,
   isPlaying: false,
