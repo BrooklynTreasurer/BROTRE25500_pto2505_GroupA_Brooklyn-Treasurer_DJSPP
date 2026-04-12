@@ -29,7 +29,7 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
   const [isSeasonMenuOpen, setIsSeasonMenuOpen] = useState(false);
   const seasonMenuRef = useRef(null);
-  const { playTrack, currentTrack, isPlaying } = useAudioPlayerStore();
+  const { playTrack, currentTrack, isPlaying, listeningHistory } = useAudioPlayerStore();
   const favourites = useFavouritesStore((state) => state.favourites);
 
   useEffect(() => {
@@ -47,6 +47,13 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
 
   const listenedMap = useMemo(() => {
     const map = new Map();
+
+    Object.entries(listeningHistory || {}).forEach(([key, value]) => {
+      if (key && value) {
+        map.set(key, value);
+      }
+    });
+
     favourites.forEach((item) => {
       if (item?.id) {
         map.set(item.id, item);
@@ -55,8 +62,9 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
         map.set(item.src, item);
       }
     });
+
     return map;
-  }, [favourites]);
+  }, [favourites, listeningHistory]);
 
   const safeSelectedSeasonIndex = Math.min(
     selectedSeasonIndex,
@@ -230,13 +238,6 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 {episode.description}
                               </p>
                             )}
-                            {(safeProgress > 0 || isFinishedEpisode) && (
-                              <p className={styles.episodeProgress}>
-                                {isFinishedEpisode
-                                  ? "Finished"
-                                  : `Resume at ${formatTime(safePlayedTime)} • ${safeProgress}% listened`}
-                              </p>
-                            )}
 
                             <div className={styles.episodeActions}>
                               <button
@@ -264,6 +265,13 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                   ? `Resume at ${formatTime(safePlayedTime)}`
                                   : "Listen To Episode"}
                               </button>
+                              {(safeProgress > 0 || isFinishedEpisode) && (
+                                <span className={styles.episodeProgress}>
+                                  {isFinishedEpisode
+                                    ? "Finished"
+                                    : `Resume at ${formatTime(safePlayedTime)} • ${safeProgress}% listened`}
+                                </span>
+                              )}
                               <AddFavourites
                                 episode={{
                                   id: episodeTrackId,

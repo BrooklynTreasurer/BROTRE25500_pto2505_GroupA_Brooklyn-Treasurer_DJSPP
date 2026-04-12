@@ -773,8 +773,7 @@ a:link, a:visited, a:hover, a:active {
   }
 }
 
- .episode-favourite-button{
-    margin-left: 650px;
+.episode-favourite-button {
     border: 1px solid rgba(255, 255, 255, 0.32);
     background: rgba(255, 255, 255, 0.12);
     color: #fff;

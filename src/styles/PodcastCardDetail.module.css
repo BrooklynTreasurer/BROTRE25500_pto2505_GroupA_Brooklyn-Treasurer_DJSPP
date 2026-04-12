@@ -327,15 +327,26 @@
 }
 
 .episodeProgress {
-  grid-column: 2;
-  margin: 0 0 0.65rem;
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.72rem;
   line-height: 1.3;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .episodeActions {
   grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.35rem;
 }
 
 .episodePlayButton {

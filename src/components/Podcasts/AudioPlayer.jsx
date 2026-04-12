@@ -46,6 +46,7 @@ export default function AudioPlayer() {
     pause,
     setCurrentTime,
     setDuration,
+    updateListeningHistory,
   } = useAudioPlayerStore();
   const updateFavouriteProgress = useFavouritesStore((state) => state.updateFavouriteProgress);
   const lastProgressUpdate = useRef(0);
@@ -100,6 +101,7 @@ export default function AudioPlayer() {
       if (trackId && safeDuration > 0 && isIntervalPassed) {
         lastProgressUpdate.current = current;
         updateFavouriteProgress(trackId, current, safeDuration);
+        updateListeningHistory(trackId, current, safeDuration);
       }
     };
 
@@ -118,6 +120,7 @@ export default function AudioPlayer() {
       if (trackId && safeDuration > 0) {
         lastProgressUpdate.current = current;
         updateFavouriteProgress(trackId, current, safeDuration);
+        updateListeningHistory(trackId, current, safeDuration);
       }
     };
 
@@ -126,6 +129,7 @@ export default function AudioPlayer() {
       const safeDuration = audioElement.duration || 0;
       if (trackId && safeDuration > 0) {
         updateFavouriteProgress(trackId, safeDuration, safeDuration);
+        updateListeningHistory(trackId, safeDuration, safeDuration);
       }
       pause();
     };
@@ -143,7 +147,7 @@ export default function AudioPlayer() {
       audioElement.removeEventListener("seeked", handleSeeked);
       audioElement.removeEventListener("ended", handleEnded);
     };
-  }, [pause, setCurrentTime, setDuration]);
+  }, [pause, setCurrentTime, setDuration, currentTrack, updateFavouriteProgress, updateListeningHistory]);
 
   useEffect(() => {
     if (!audioRef.current) return;

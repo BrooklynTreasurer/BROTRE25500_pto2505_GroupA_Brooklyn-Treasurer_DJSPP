@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 const STORAGE_KEY = "podcastAppAudioState";
+const HISTORY_KEY = "podcastAppListeningHistory";
 
 function loadAudioState() {
   if (typeof window === "undefined") {
@@ -34,13 +35,43 @@ function persistAudioState(state) {
   }
 }
 
+function loadListeningHistory() {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  try {
+    const stored = localStorage.getItem(HISTORY_KEY);
+    if (!stored) return {};
+
+    const parsed = JSON.parse(stored);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function persistListeningHistory(history) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  } catch {
+    // ignore write failures
+  }
+}
+
 const initialAudioState = loadAudioState();
+const initialListeningHistory = loadListeningHistory();
 
 export const useAudioPlayerStore = create((set, get) => ({
   currentTrack: initialAudioState.currentTrack || null,
   isPlaying: false,
   currentTime: Math.max(0, Number(initialAudioState.currentTime) || 0),
   duration: Math.max(0, Number(initialAudioState.duration) || 0),
+  listeningHistory: initialListeningHistory,
 
   playTrack: (track) => {
     if (!track?.src) return;
@@ -115,6 +146,39 @@ export const useAudioPlayerStore = create((set, get) => ({
       persistAudioState(nextState);
       return { duration: nextDuration };
     }),
+
+  updateListeningHistory: (identifier, playedTime, duration) =>
+    set((state) => {
+      if (!identifier) return state;
+
+      const safePlayedTime = Math.max(0, Number(playedTime) || 0);
+      const safeDuration = Math.max(0, Number(duration) || 0);
+      const progress = safeDuration > 0
+        ? Math.min(100, Math.round((safePlayedTime / safeDuration) * 100))
+        : state.listeningHistory[identifier]?.progress || 0;
+      const finished = progress >= 100;
+
+      const nextHistory = {
+        ...state.listeningHistory,
+        [identifier]: {
+          ...state.listeningHistory[identifier],
+          playedTime: safePlayedTime,
+          duration: safeDuration,
+          progress,
+          finished,
+        },
+      };
+
+      persistListeningHistory(nextHistory);
+      return { listeningHistory: nextHistory };
+    }),
+
+  resetListeningHistory: () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(HISTORY_KEY);
+    }
+    set({ listeningHistory: {} });
+  },
 
   resetAudioState: () => {
     if (typeof window !== "undefined") {

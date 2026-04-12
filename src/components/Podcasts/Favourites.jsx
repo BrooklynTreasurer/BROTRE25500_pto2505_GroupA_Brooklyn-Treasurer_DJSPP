@@ -53,7 +53,8 @@ export default function Favourites() {
   const sortKey = useFavouritesStore((state) => state.sortKey);
   const setSortKey = useFavouritesStore((state) => state.setSortKey);
   const removeFavourite = useFavouritesStore((state) => state.removeFavourite);
-  const resetListeningHistory = useFavouritesStore((state) => state.resetListeningHistory);
+  const resetFavouritesListeningHistory = useFavouritesStore((state) => state.resetListeningHistory);
+  const resetAudioListeningHistory = useAudioPlayerStore((state) => state.resetListeningHistory);
   const playTrack = useAudioPlayerStore((state) => state.playTrack);
   const currentTrack = useAudioPlayerStore((state) => state.currentTrack);
   const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
@@ -82,7 +83,10 @@ export default function Favourites() {
           <button
             type="button"
             className={styles.favouritesPage__resetButton}
-            onClick={resetListeningHistory}
+            onClick={() => {
+              resetFavouritesListeningHistory();
+              resetAudioListeningHistory();
+            }}
           >
             Reset listening history
           </button>
