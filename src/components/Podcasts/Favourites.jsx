@@ -53,6 +53,7 @@ export default function Favourites() {
   const sortKey = useFavouritesStore((state) => state.sortKey);
   const setSortKey = useFavouritesStore((state) => state.setSortKey);
   const removeFavourite = useFavouritesStore((state) => state.removeFavourite);
+  const resetListeningHistory = useFavouritesStore((state) => state.resetListeningHistory);
   const playTrack = useAudioPlayerStore((state) => state.playTrack);
   const currentTrack = useAudioPlayerStore((state) => state.currentTrack);
   const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
@@ -68,15 +69,24 @@ export default function Favourites() {
         <div>
           <h2>Your Favourite Episodes</h2>
           <p>
-            Browse episodes saved as favourites and sort by title or the date and time you added them.
+            Browse episodes saved as favourites and track your listening progress over time.
           </p>
         </div>
 
-        <SortSelect
-          options={SORT_OPTIONS}
-          selectedSort={sortKey}
-          onSelectSort={setSortKey}
-        />
+        <div className={styles.favouritesPage__headerActions}>
+          <SortSelect
+            options={SORT_OPTIONS}
+            selectedSort={sortKey}
+            onSelectSort={setSortKey}
+          />
+          <button
+            type="button"
+            className={styles.favouritesPage__resetButton}
+            onClick={resetListeningHistory}
+          >
+            Reset listening history
+          </button>
+        </div>
       </div>
 
       {sortedFavourites.length === 0 ? (
@@ -125,10 +135,15 @@ export default function Favourites() {
                         title: safeTitle,
                         showTitle: safeShowTitle,
                         image: safeImage,
+                        startTime: episode.finished ? 0 : safePlayedTime,
                       })
                     }
                   >
-                    {isActiveEpisode && isPlaying ? "Playing" : "Play"}
+                    {isActiveEpisode && isPlaying
+                      ? "Playing"
+                      : episode.finished
+                      ? "Replay"
+                      : "Play"}
                   </button>
                   <button
                     type="button"

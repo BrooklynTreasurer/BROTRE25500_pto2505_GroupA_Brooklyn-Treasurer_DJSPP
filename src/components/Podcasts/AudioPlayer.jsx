@@ -55,10 +55,26 @@ export default function AudioPlayer() {
     if (!audioElement || !currentTrack?.src) return;
 
     const currentSrc = audioElement.getAttribute("src");
-    if (currentSrc !== currentTrack.src) {
+    const shouldLoadSource = currentSrc !== currentTrack.src;
+    const resumeTime = Math.max(0, Number(currentTime) || 0);
+
+    if (shouldLoadSource) {
       audioElement.src = currentTrack.src;
-      audioElement.currentTime = 0;
+      if (resumeTime > 0) {
+        const setStartTime = () => {
+          audioElement.currentTime = Math.min(resumeTime, audioElement.duration || resumeTime);
+          audioElement.removeEventListener("loadedmetadata", setStartTime);
+        };
+        audioElement.addEventListener("loadedmetadata", setStartTime);
+      } else {
+        audioElement.currentTime = 0;
+      }
     }
+  }, [currentTrack?.src, currentTime]);
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (!audioElement || !currentTrack?.src) return;
 
     if (isPlaying) {
       pauseOtherMediaElements(audioElement);
@@ -68,7 +84,7 @@ export default function AudioPlayer() {
     } else {
       audioElement.pause();
     }
-  }, [currentTrack, isPlaying, pause]);
+  }, [currentTrack?.src, isPlaying, pause]);
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -105,18 +121,27 @@ export default function AudioPlayer() {
       }
     };
 
+    const handleEnded = () => {
+      const trackId = currentTrack?.id || currentTrack?.src;
+      const safeDuration = audioElement.duration || 0;
+      if (trackId && safeDuration > 0) {
+        updateFavouriteProgress(trackId, safeDuration, safeDuration);
+      }
+      pause();
+    };
+
     audioElement.addEventListener("timeupdate", handleTimeUpdate);
     audioElement.addEventListener("loadedmetadata", handleDurationChange);
     audioElement.addEventListener("durationchange", handleDurationChange);
     audioElement.addEventListener("seeked", handleSeeked);
-    audioElement.addEventListener("ended", pause);
+    audioElement.addEventListener("ended", handleEnded);
 
     return () => {
       audioElement.removeEventListener("timeupdate", handleTimeUpdate);
       audioElement.removeEventListener("loadedmetadata", handleDurationChange);
       audioElement.removeEventListener("durationchange", handleDurationChange);
       audioElement.removeEventListener("seeked", handleSeeked);
-      audioElement.removeEventListener("ended", pause);
+      audioElement.removeEventListener("ended", handleEnded);
     };
   }, [pause, setCurrentTime, setDuration]);
 

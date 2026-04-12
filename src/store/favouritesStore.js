@@ -40,6 +40,7 @@ export const useFavouritesStore = create((set, get) => ({
       playedTime: 0,
       duration: 0,
       progress: 0,
+      finished: false,
     };
 
     set((state) => {
@@ -53,6 +54,7 @@ export const useFavouritesStore = create((set, get) => ({
           ...favourites[existingIndex],
           ...nextEpisode,
           addedAt: favourites[existingIndex].addedAt || nextEpisode.addedAt,
+          finished: favourites[existingIndex].finished || false,
         };
       } else {
         favourites.push(nextEpisode);
@@ -81,7 +83,10 @@ export const useFavouritesStore = create((set, get) => ({
         }
 
         const safePlayedTime = Math.max(0, Number(playedTime) || 0);
-        const safeDuration = Math.max(0, Number(duration) || 0);
+        const safeDuration = Math.max(
+          0,
+          Number(duration) || Number(item.duration) || 0,
+        );
         const progress = safeDuration > 0
           ? Math.min(100, Math.round((safePlayedTime / safeDuration) * 100))
           : item.progress || 0;
@@ -91,9 +96,23 @@ export const useFavouritesStore = create((set, get) => ({
           playedTime: safePlayedTime,
           duration: safeDuration,
           progress,
+          finished: progress >= 100,
         };
       });
 
+      persistFavourites(favourites);
+      return { favourites };
+    });
+  },
+
+  resetListeningHistory: () => {
+    set((state) => {
+      const favourites = state.favourites.map((item) => ({
+        ...item,
+        playedTime: 0,
+        progress: 0,
+        finished: false,
+      }));
       persistFavourites(favourites);
       return { favourites };
     });

@@ -1,10 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import formatDate from "../../utils/formatDate.js";
 import styles from "../../styles/PodcastCardDetail.module.css";
 import detailBackground from "../../assets/svg.png";
 import { useAudioPlayerStore } from "../../store/audioPlayerStore.js";
+import { useFavouritesStore } from "../../store/favouritesStore.js";
 import AddFavourites from "../Filters/AddFavourites.jsx";
+
+function formatTime(seconds) {
+  const safeSeconds = Math.max(0, Number(seconds) || 0);
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = Math.floor(safeSeconds % 60);
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+}
 
 /**
  * Renders a detailed podcast card view.
@@ -22,6 +30,7 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
   const [isSeasonMenuOpen, setIsSeasonMenuOpen] = useState(false);
   const seasonMenuRef = useRef(null);
   const { playTrack, currentTrack, isPlaying } = useAudioPlayerStore();
+  const favourites = useFavouritesStore((state) => state.favourites);
 
   useEffect(() => {
     const closeMenuOnOutsideClick = (event) => {
@@ -35,6 +44,19 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
       document.removeEventListener("mousedown", closeMenuOnOutsideClick);
     };
   }, []);
+
+  const listenedMap = useMemo(() => {
+    const map = new Map();
+    favourites.forEach((item) => {
+      if (item?.id) {
+        map.set(item.id, item);
+      }
+      if (item?.src) {
+        map.set(item.src, item);
+      }
+    });
+    return map;
+  }, [favourites]);
 
   const safeSelectedSeasonIndex = Math.min(
     selectedSeasonIndex,
@@ -175,6 +197,15 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                         }-${selectedSeasonNumber}-${
                           episode.id || `episode-${episodeNumber}`
                         }`;
+                        const episodeHistoryItem =
+                          listenedMap.get(episodeTrackId) || listenedMap.get(episodeSource);
+                        const safePlayedTime = Math.max(0, Number(episodeHistoryItem?.playedTime) || 0);
+                        const safeProgress = Math.min(
+                          100,
+                          Math.max(0, Number(episodeHistoryItem?.progress) || 0),
+                        );
+                        const isFinishedEpisode = episodeHistoryItem?.finished || safeProgress >= 100;
+                        const resumeTime = isFinishedEpisode ? 0 : safePlayedTime;
                         const isActiveEpisode =
                           Boolean(episodeSource) &&
                           (currentTrack?.id
@@ -199,6 +230,13 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                 {episode.description}
                               </p>
                             )}
+                            {(safeProgress > 0 || isFinishedEpisode) && (
+                              <p className={styles.episodeProgress}>
+                                {isFinishedEpisode
+                                  ? "Finished"
+                                  : `Resume at ${formatTime(safePlayedTime)} • ${safeProgress}% listened`}
+                              </p>
+                            )}
 
                             <div className={styles.episodeActions}>
                               <button
@@ -213,11 +251,18 @@ export default function PodcastCardDetail({ podcast, genreNames = [] }) {
                                     title: episode.title || `Episode ${episodeNumber}`,
                                     showTitle: podcast.title || "Podcast",
                                     image: selectedSeason?.image || podcast.image,
+                                    startTime: resumeTime,
                                   })
                                 }
                                 disabled={!episodeSource}
                               >
-                                {isActiveEpisode && isPlaying ? "Now Playing" : "Listen To Episode"}
+                                {isActiveEpisode && isPlaying
+                                  ? "Now Playing"
+                                  : isFinishedEpisode
+                                  ? "Replay episode"
+                                  : safeProgress > 0
+                                  ? `Resume at ${formatTime(safePlayedTime)}`
+                                  : "Listen To Episode"}
                               </button>
                               <AddFavourites
                                 episode={{
